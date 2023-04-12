@@ -1,13 +1,9 @@
 <script setup>
 import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
-import DefaultFooter from "@/examples/footers/FooterDefault.vue";
+import ChatDialog from "./ChatDialog.vue";
 import { ref } from "vue";
 import { Cloud } from "laf-client-sdk";
-// import wx from "../../public/wx.png";
-// 将marked 引入
-// import { marked } from "marked";
-import { User } from "@element-plus/icons-vue";
-// import QrcodeVue from "qrcode.vue";
+
 import { ElMessage } from "element-plus";
 import axios from "axios";
 import MarkdownIt from "markdown-it";
@@ -66,7 +62,7 @@ const tel = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-
 //======================================created======================================
 
 // 获取用户剩余次数
-getAmount();
+amount.value = 100;
 
 // 判断是否为移动设备
 if (
@@ -82,19 +78,9 @@ if (
 //======================================function======================================
 
 // 获取用户剩余次数
-async function getAmount() {
-    if (!localStorage.getItem("access_token")) return;
-    const res = await cloud.invoke("get-amount");
-    amount.value = res.amount;
-}
+
 
 //获取验证码
-async function getCode() {
-    if (!tel.test(phone.value)) return (err.value = true);
-    if (codebut.value) return;
-    countDown();
-    const res = await cloud.invoke("getCode", { phone: phone.value });
-}
 
 //验证码倒计时
 function countDown() {
@@ -116,23 +102,6 @@ function countDown() {
 }
 
 //验证登录
-async function login() {
-    const res = await cloud.invoke("login", { phone: phone.value, code: code.value });
-    console.log(res);
-    if (res.code === 1) {
-        localStorage.setItem("access_token", res.data.access_token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        success();
-        centerDialogVisible2.value = false;
-        getAmount();
-    } else {
-        ElMessage({
-            message: "无效的验证码",
-            type: "error",
-        });
-    }
-}
-
 //发送消息
 async function send() {
     //发送时验证登录
@@ -253,37 +222,8 @@ function select(e) {
 }
 
 //点击充值
-async function openCode() {
-    let num = 0;
-    if (indexUp.value == 0) num = 2000;
-    if (indexUp.value == 1) num = 5000;
-    if (indexUp.value == 2) num = 100000;
-
-    const res = await cloud.invoke("pay", { amount: num });
-    payOrder.value = res.orderId;
-    codeUrl.value = res.codeUrl;
-    centerDialogVisible.value = false;
-    upCode.value = true;
-    checkPay();
-}
 
 //验证用户是否付款
-async function checkPay() {
-    const res = await cloud.invoke("check-pay-ordet", { order: payOrder.value });
-    if (res.code == 1) {
-        upCode.value = false;
-        getAmount();
-        ElMessage({
-            message: "充值成功",
-            type: "success",
-        });
-    } else {
-        setTimeout(() => {
-            checkPay();
-        }, 1000);
-    }
-}
-
 //发送消息适配PC或phone
 function handleEnter(e) {
     if (e.key === "Enter" && !isMobile.value && !e.shiftKey) {
@@ -299,26 +239,6 @@ const success = () => {
     });
 };
 
-//判断是否登录
-function judge() {
-    const access_token = localStorage.getItem("access_token");
-    if (access_token)
-        return ElMessage({
-            message: "您已经登录过了",
-            type: "success",
-        });
-    centerDialogVisible2.value = true;
-}
-
-//登录后可点击充值
-function judgeUp() {
-    if (!localStorage.getItem("access_token"))
-        return ElMessage({
-            message: "请登录",
-            type: "error",
-        });
-    centerDialogVisible.value = true;
-}
 </script>
 <template>
     <div class="container position-sticky z-index-sticky top-0">
@@ -337,79 +257,7 @@ function judgeUp() {
     </div>
     <div class="page-header min-vh-100" style="margin-top: 3%">
         <div class="container">
-            <div  class="begintitle">
-                <h1 style="font-family: Cursive; font-size: 50px">Laf Ai</h1>
-
-                <div style="margin-top: 80px; text-indent: 20px">
-                    如果想寻求合作或深度交流，可
-                    <a
-                        style="color: #ff0405"
-                        href="https://x85clg-wenjuan.site.laf.dev/#/pages/form/index?id=6412c9980ac642ce124ad116"
-                        target="_blank"
-                    >点击</a
-                    >
-                    留下信息<span v-if="isMobile === true">!</span>
-                    <span v-if="isMobile === false">，我们顾问会第一时间联系您!</span>
-                </div>
-
-                <div style="margin-top: 10px">商务洽谈:18629359689</div>
-
-                <div class="lafText" v-if="isMobile === false">
-                    <div style="text-align: center">
-                        <a href="https://docs.sealos.io/zh-Hans/" style="color: #ff0405">Sealos</a>
-                        <span> 开源云操作系统， </span>
-                        <a href="https://laf.dev/" style="color: #ff0405">Laf</a>
-                        <span> 开源函数计算平台 </span>
-                    </div>
-                    <div>快速交付分布式应用、小时级搭建个性化云系统、分钟级构建中间件服务</div>
-                    <div>使用公有云IaaS的可降本50%，基于Sealos自建私有云可降本80%！</div>
-                </div>
-            </div>
-            <div id="myList">
-                <div
-                    v-show="item.text"
-                    :class="item.type === 0 ? 'problemList' : 'answerList'"
-                    v-for="item in list"
-                >
-                    <img class="listImg" :src="item.avatar" alt="" />
-                    <div v-html="item.text" class="listText"></div>
-                </div>
-
-                <div v-show="loading" class="answerList">
-                    <img class="listImg" src="/logo.jpg" alt="" />
-                    <img class="addin" src="/loading.gif" alt="" />
-                </div>
-            </div>
-            <div class="inputbox">
-                <el-input
-                    v-model="question"
-                    v-bind:readonly="loading"
-                    maxlength="2000"
-                    tabindex="0"
-                    :autosize="{ minRows: 1, maxRows: 5 }"
-                    type="textarea"
-                    :placeholder="placeholder"
-                    @keypress="handleEnter"
-                />
-
-                <!-- 发送按钮小飞机 -->
-                <div class="btn-send" @click="send">
-                    <div class="send-view" style="display: flex">
-                        <svg
-                            stroke="currentColor"
-                            fill="none"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
-                            class="h-4 w-4 mr-1"
-                            height="1.5em"
-                            width="1.5em"
-                        >
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            <ChatDialog />
         </div>
     </div>
 <!--    <DefaultFooter />-->
@@ -619,7 +467,6 @@ textarea {
     width: 160px;
     height: 140px;
     border: 1px solid #e6a23c;
-    box-shadow: 0 16rpx 16rpx rgba(10, 16, 20, 0.24), 0 0 16rpx rgba(10, 16, 20, 0.12);
 }
 
 .boxCard {
@@ -628,7 +475,6 @@ textarea {
     width: 160px;
     height: 140px;
     border: 1px solid #fff;
-    box-shadow: 0 16rpx 16rpx rgba(10, 16, 20, 0.24), 0 0 16rpx rgba(10, 16, 20, 0.12);
 }
 
 .useNumber {
