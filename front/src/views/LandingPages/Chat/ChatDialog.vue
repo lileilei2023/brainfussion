@@ -133,19 +133,19 @@ async function login() {
 //发送消息
 async function send() {
     //发送时验证登录
-    if (localStorage.getItem("access_token") == null)
-        return ElMessage({
-            message: "请先登录！",
-            type: "error",
-        });
+    // if (localStorage.getItem("access_token") == null)
+    //     return ElMessage({
+    //         message: "请先登录！",
+    //         type: "error",
+    //     });
     //判断用户次数
-    if (amount.value <= 0)
-        return ElMessage({
-            message: "您的剩余次数不足，请充值！",
-            type: "error",
-        });
+    // if (amount.value <= 0)
+    //     return ElMessage({
+    //         message: "您的剩余次数不足，请充值！",
+    //         type: "error",
+    //     });
     //判断是否回复
-    if (loading.value) return;
+    // if (loading.value) return;
     list.value.push({
         text: question.value,
         avatar: "/avatar.jpeg",
@@ -351,20 +351,10 @@ function judgeUp() {
         />
 
         <!-- 发送按钮小飞机 -->
-        <div class="btn-send" @click="send">
+        <div class="btn-send" @click="send" style="background-color: #e8e3e3">
             <div class="send-view" style="display: flex">
-                <svg
-                    stroke="currentColor"
-                    fill="none"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    class="h-4 w-4 mr-1"
-                    height="1.5em"
-                    width="1.5em"
-                >
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
+<!--                <svg t="1681344992358" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5604" width="200" height="200"><path d="M900.4 117.6c-8.3-5.5-19.1-5.5-27.5 0L123.5 617.2c-7.7 5.1-12 14.1-11 23.3 0.9 9.2 6.9 17.2 15.5 20.6l195.3 78.2 91.9 160.9c4.5 7.9 12.9 12.8 22 12.7 8.8 0 17-4.7 21.5-12.2l52-86.4 242.1 96.9c2.9 1.2 6.1 1.8 9.2 1.7 12.4 0.2 23-8.8 25-21l124.9-749.4c1.5-9.8-3-19.6-11.5-24.9zM437.3 836.5l-70.2-121.7L840 208 437.3 836.5z" fill="#3259CE" p-id="5605"></path></svg>-->
+                <svg t="1681345213587" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10857" width="200" height="200"><path d="M512 0c282.7776 0 512 229.2224 512 512s-229.2224 512-512 512S0 794.7776 0 512 229.2224 0 512 0z m233.984 204.8c-2.56 0-5.12 0.4608-7.4752 1.3312l-3.4816 1.6896-570.368 329.216a20.3264 20.3264 0 0 0-10.9568 16.0256v4.096l0.512 4.2496c1.1776 5.4272 4.608 10.0864 9.4208 12.9024l3.84 1.7408 135.3216 55.6032 366.4384-317.1328-296.1408 363.1104v119.6032c0 2.9696 0.5632 5.9392 1.7408 8.6528l2.2016 3.84 2.8672 3.4304c1.4336 1.3824 3.072 2.56 4.8128 3.4816l2.7648 1.1776 3.6864 1.0752 3.84 0.3072 3.8912-0.256a20.1216 20.1216 0 0 0 10.2912-4.8128l2.6624-2.8672 82.944-101.0688 155.2896 63.3344 3.9936 1.28 4.1984 0.512 3.9424-0.3584a21.6576 21.6576 0 0 0 16.64-14.0288l1.024-3.7888 87.7056-526.6432a21.4016 21.4016 0 0 0-5.888-19.2512l-3.328-2.6624A21.5552 21.5552 0 0 0 746.0352 204.8z" fill="#1296db" p-id="10858"></path></svg>
             </div>
         </div>
     </div>
