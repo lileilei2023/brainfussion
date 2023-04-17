@@ -1,6 +1,7 @@
 <script setup>
 import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import ChatDialog from "./ChatDialog.vue";
+import PDFViewer from "./PDFViewer.vue";
 import { ref } from "vue";
 import { Cloud } from "laf-client-sdk";
 
@@ -14,7 +15,6 @@ const cloud = new Cloud({
     getAccessToken: () => localStorage.getItem("access_token"),
     timeout: 60000,
 });
-
 //======================================data======================================
 //消息列表
 const list = ref([]);
@@ -240,28 +240,29 @@ const success = () => {
 };
 
 </script>
+
 <template>
-    <div class="container position-sticky z-index-sticky top-0">
-        <div class="row">
-            <div class="col-12">
-                <DefaultNavbar
-                    :sticky="true"
-                    :action="{
-            route: 'https://www.creative-tim.com/product/vue-material-kit-pro',
-            color: 'bg-gradient-success',
-            label: '注册/登录',
-          }"
-                />
-            </div>
-        </div>
-    </div>
+
     <div class="page-header min-vh-100" style="margin-top: 3%">
         <div class="container">
-            <ChatDialog />
+<!--            <div>-->
+<!--                <pdf :src="pdfUrl" :page="1" :original-size="true"></pdf>-->
+<!--            </div>-->
+<!--            <PDFViewer />-->
+            <div class="col-lg-4 mx-auto">
+                <PDFViewer />
+<!--                <ChatDialog />-->
+            </div>
+            <div class="col-lg-4 mx-auto">
+<!--                <PDFViewer />-->
+                <ChatDialog />
+            </div>
         </div>
     </div>
 <!--    <DefaultFooter />-->
 </template>
+
+
 <style scoped>
 .page {
     position: relative;
