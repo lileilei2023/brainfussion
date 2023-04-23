@@ -1,7 +1,6 @@
 <script setup>
 import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import ChatDialog from "./ChatDialog.vue";
-import PDFViewer from "./PDFViewer.vue";
 import { ref } from "vue";
 import { Cloud } from "laf-client-sdk";
 
@@ -245,16 +244,10 @@ const success = () => {
 
     <div class="page-header min-vh-100" style="margin-top: 3%">
         <div class="container">
-<!--            <div>-->
-<!--                <pdf :src="pdfUrl" :page="1" :original-size="true"></pdf>-->
-<!--            </div>-->
-<!--            <PDFViewer />-->
+
             <div class="col-lg-4 mx-auto">
-                <PDFViewer />
-<!--                <ChatDialog />-->
             </div>
             <div class="col-lg-4 mx-auto">
-<!--                <PDFViewer />-->
                 <ChatDialog />
             </div>
         </div>
